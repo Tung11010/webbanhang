@@ -1,9 +1,89 @@
-<?php include 'includes/header.php'; ?>
+<?php
+// Khởi tạo session nếu chưa có
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+
+require_once 'includes/db.php';
+
+// Xử lý thêm sản phẩm vào giỏ hàng
+if (isset($_GET['add'])) {
+    $product_id = $_GET['add'];
+    
+    // Kiểm tra nếu giỏ hàng chưa được tạo trong session
+    if (!isset($_SESSION['cart'])) {
+        $_SESSION['cart'] = [];
+    }
+    
+    // Thêm sản phẩm vào giỏ hàng (tăng số lượng nếu sản phẩm đã có)
+    if (isset($_SESSION['cart'][$product_id])) {
+        $_SESSION['cart'][$product_id]++;
+    } else {
+        $_SESSION['cart'][$product_id] = 1;
+    }
+    
+    // Nếu người dùng đã đăng nhập, lưu hoặc cập nhật vào bảng orders
+    if (isset($_SESSION['user_id'])) {
+        $quantity = $_SESSION['cart'][$product_id];
+        $stmt = $conn->prepare("SELECT * FROM orders WHERE user_id = ? AND product_id = ?");
+        $stmt->execute([$_SESSION['user_id'], $product_id]);
+        $order = $stmt->fetch();
+
+        // Lấy giá sản phẩm để tính total_price
+        $product_stmt = $conn->prepare("SELECT price FROM products WHERE id = ?");
+        $product_stmt->execute([$product_id]);
+        $product = $product_stmt->fetch();
+        $total_price = $product ? $product['price'] * $quantity : 0;
+
+        if ($order) {
+            // Cập nhật số lượng và tổng tiền
+            $stmt = $conn->prepare("UPDATE orders SET quantity = ?, total_price = ? WHERE user_id = ? AND product_id = ?");
+            $stmt->execute([$quantity, $total_price, $_SESSION['user_id'], $product_id]);
+        } else {
+            // Thêm mới vào orders
+            $stmt = $conn->prepare("INSERT INTO orders (user_id, product_id, quantity, total_price, order_date) VALUES (?, ?, ?, ?, NOW())");
+            $stmt->execute([$_SESSION['user_id'], $product_id, $quantity, $total_price]);
+        }
+    }
+    
+    // Chuyển hướng lại trang
+    header("Location: index.php");
+    exit();
+}
+
+// Đồng bộ giỏ hàng từ session vào database khi người dùng đăng nhập
+if (isset($_SESSION['user_id']) && isset($_SESSION['cart'])) {
+    foreach ($_SESSION['cart'] as $product_id => $quantity) {
+        $stmt = $conn->prepare("SELECT * FROM orders WHERE user_id = ? AND product_id = ?");
+        $stmt->execute([$_SESSION['user_id'], $product_id]);
+        $order = $stmt->fetch();
+
+        // Lấy thông tin sản phẩm để tính total_price
+        $product_stmt = $conn->prepare("SELECT price FROM products WHERE id = ?");
+        $product_stmt->execute([$product_id]);
+        $product = $product_stmt->fetch();
+        $total_price = $product ? $product['price'] * $quantity : 0;
+
+        if ($order) {
+            // Cập nhật số lượng và tổng tiền nếu sản phẩm đã tồn tại trong orders
+            $stmt = $conn->prepare("UPDATE orders SET quantity = ?, total_price = ? WHERE user_id = ? AND product_id = ?");
+            $stmt->execute([$quantity, $total_price, $_SESSION['user_id'], $product_id]);
+        } else {
+            // Thêm mới vào orders
+            $stmt = $conn->prepare("INSERT INTO orders (user_id, product_id, quantity, total_price, order_date) VALUES (?, ?, ?, ?, NOW())");
+            $stmt->execute([$_SESSION['user_id'], $product_id, $quantity, $total_price]);
+        }
+    }
+}
+
+include 'includes/header.php';
+?>
+
 <!-- Hero Section -->
 <div class="hero-section">
     <div class="row align-items-center">
         <div class="col-md-6 hero-content">
-        <h1>Welcome to <span class="text-success">Book Store</span></h1>
+            <h1>Welcome to <span class="text-success">Book Store</span></h1>
             <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatibus.</p>
             <p>Lorem ipsum is simply dummy text of the printing and typesetting industry. Lorem ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
             <a href="#featured" class="btn btn-primary">Learn More</a>
@@ -70,19 +150,19 @@
         // Lấy 10 sách từ cơ sở dữ liệu
         $stmt = $conn->query("SELECT * FROM products LIMIT 10");
         $books = $stmt->fetchAll();
-        // Nếu không có đủ sách trong cơ sở dữ liệu, sử dụng dữ liệu mẫu
+        // Nếu không có sách trong cơ sở dữ liệu, sử dụng dữ liệu mẫu
         if (empty($books)) {
             $books = [
-                ['name' => 'Coco Goose', 'image' => 'arrival_1.jpg', 'price' => 25.50],
-                ['name' => 'Subtlety', 'image' => 'arrival_2.jpg', 'price' => 25.50],
-                ['name' => 'Westpart', 'image' => 'arrival_3.jpg', 'price' => 25.50],
-                ['name' => 'Book 4', 'image' => 'arrival_4.jpg', 'price' => 25.50],
-                ['name' => 'Clever Lands', 'image' => 'arrival_5.jpg', 'price' => 25.50],
-                ['name' => 'Book 6', 'image' => 'arrival_6.jpg', 'price' => 25.50],
-                ['name' => 'Book 7', 'image' => 'arrival_7.jpg', 'price' => 25.50],
-                ['name' => 'Book 8', 'image' => 'arrival_8.webp', 'price' => 25.50],
-                ['name' => 'Book 9', 'image' => 'arrival_9.jpg', 'price' => 25.50],
-                ['name' => 'Book 10', 'image' => 'arrival_10.jpg', 'price' => 25.50],
+                ['id' => 1, 'name' => 'Coco Goose', 'image' => 'arrival_1.jpg', 'price' => 25.50],
+                ['id' => 2, 'name' => 'Subtlety', 'image' => 'arrival_2.jpg', 'price' => 25.50],
+                ['id' => 3, 'name' => 'Westpart', 'image' => 'arrival_3.jpg', 'price' => 25.50],
+                ['id' => 4, 'name' => 'Book 4', 'image' => 'arrival_4.jpg', 'price' => 25.50],
+                ['id' => 5, 'name' => 'Clever Lands', 'image' => 'arrival_5.jpg', 'price' => 25.50],
+                ['id' => 6, 'name' => 'Book 6', 'image' => 'arrival_6.jpg', 'price' => 25.50],
+                ['id' => 7, 'name' => 'Book 7', 'image' => 'arrival_7.jpg', 'price' => 25.50],
+                ['id' => 8, 'name' => 'Book 8', 'image' => 'arrival_8.webp', 'price' => 25.50],
+                ['id' => 9, 'name' => 'Book 9', 'image' => 'arrival_9.jpg', 'price' => 25.50],
+                ['id' => 10, 'name' => 'Book 10', 'image' => 'arrival_10.jpg', 'price' => 25.50],
             ];
         }
         foreach ($books as $book):
@@ -92,7 +172,7 @@
                 <h5><?php echo $book['name']; ?></h5>
                 <p class="category">Featured Books<br>Thriller, Horror, Romance</p>
                 <p class="price">$<?php echo number_format($book['price'], 2); ?> <del>$28.60</del></p>
-                <a href="cart.php?add=<?php echo isset($book['id']) ? $book['id'] : ''; ?>" class="btn btn-primary">Learn More</a>
+                <a href="?add=<?php echo $book['id']; ?>" class="btn btn-primary">Add to Cart</a>
             </div>
         <?php endforeach; ?>
     </div>

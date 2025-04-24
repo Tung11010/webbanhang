@@ -2,82 +2,182 @@ body {
     background-color: #f8f9fa;
     font-family: Arial, sans-serif;
     margin: 0;
+    padding-top: 70px; /* Thêm padding-top để nội dung không bị che bởi navbar cố định */
 }
+
 .container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 15px;
 }
+
 .navbar {
     background-color: #e6f0fa !important;
     padding: 10px 0;
+    position: fixed; /* Cố định navbar ở đầu trang */
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000; /* Đảm bảo navbar nằm trên các phần tử khác */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Thêm bóng để navbar nổi bật */
 }
+
 .navbar-brand img {
     height: 40px;
 }
+
+.navbar-nav {
+    display: flex;
+    justify-content: center;
+    flex-grow: 1;
+}
+
 .navbar-nav .nav-link {
     color: #333 !important;
     font-weight: 500;
     margin-right: 15px;
     font-size: 1.1rem;
 }
+
 .navbar-nav .nav-link:hover {
     color: #007bff !important;
 }
+
+.cart-container {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
 .cart-icon {
     font-size: 1.5rem;
     color: #333;
     text-decoration: none;
+    cursor: pointer;
+    position: relative;
 }
+
 .cart-icon:hover {
     color: #007bff;
 }
+
+.cart-count {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background-color: #007bff;
+    color: #fff;
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+
+.offcanvas {
+    width: 350px !important;
+}
+
+.offcanvas-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.cart-item {
+    border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 10px;
+}
+
+.cart-item-image {
+    width: 80px;
+    height: 100px;
+    object-fit: cover;
+}
+
+.cart-item-details h6 {
+    font-size: 1rem;
+    margin-bottom: 5px;
+}
+
+.cart-item-details p {
+    font-size: 0.85rem;
+    margin-bottom: 5px;
+}
+
+.cart-item-details .btn-sm {
+    padding: 2px 8px;
+}
+
+.cart-summary {
+    margin-top: 20px;
+}
+
+.cart-summary p {
+    font-size: 1rem;
+    margin-bottom: 10px;
+}
+
+.cart-summary .btn {
+    background-color: #ffc107;
+    color: #000;
+    font-weight: bold;
+}
+
 .hero-section {
     background-color: #f5f9fc;
     padding: 50px 0;
 }
+
 .hero-section .row {
     align-items: center;
     max-width: 1200px;
     margin: 0 auto;
 }
+
 .hero-content {
     max-width: 100%;
 }
+
 .hero-content h1 {
     font-size: 3.5rem;
     font-weight: bold;
     color: #333;
     margin-bottom: 20px;
 }
+
 .hero-content p {
     font-size: 1.1rem;
     color: #666;
     margin-bottom: 30px;
 }
+
 .hero-content .btn {
     background-color: #007bff;
     border: none;
     padding: 10px 20px;
     font-size: 1rem;
 }
+
 .books-shelf {
     display: flex;
     justify-content: center;
 }
+
 .books-shelf img {
     width: 100%;
     max-width: 500px;
     height: auto;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
+
 .services-section {
     padding: 50px 0;
 }
+
 .services-section .row {
     max-width: 1200px;
     margin: 0 auto;
 }
+
 .service-card {
     border: 1px solid #e0e0e0;
     border-radius: 10px;
@@ -86,6 +186,7 @@ body {
     background-color: #fff;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
+
 .service-card h5 {
     font-size: 1.2rem;
     font-weight: bold;
@@ -93,33 +194,40 @@ body {
     margin-top: 15px;
     margin-bottom: 10px;
 }
+
 .service-card p {
     font-size: 0.9rem;
     color: #666;
 }
+
 .service-card i {
     font-size: 2rem;
     color: #007bff;
 }
+
 .about-section {
     padding: 50px 0;
 }
+
 .about-section .row {
     max-width: 1200px;
     margin: 0 auto;
     align-items: center;
 }
+
 .about-section h2 {
     font-size: 2.5rem;
     font-weight: bold;
     color: #333;
     margin-bottom: 30px;
 }
+
 .about-section p {
     font-size: 1.1rem;
     color: #666;
     line-height: 1.6;
 }
+
 .about-section .btn {
     background-color: #007bff;
     border: none;
@@ -127,14 +235,17 @@ body {
     font-size: 1rem;
     margin-top: 20px;
 }
+
 .about-section img {
     width: 100%;
     max-width: 500px;
     height: auto;
 }
+
 .featured-section {
     padding: 50px 0;
 }
+
 .featured-section h2 {
     font-size: 2.5rem;
     font-weight: bold;
@@ -142,6 +253,7 @@ body {
     text-align: center;
     margin-bottom: 40px;
 }
+
 .featured-books-row {
     display: flex;
     justify-content: center;
@@ -150,6 +262,7 @@ body {
     max-width: 1200px;
     margin: 0 auto;
 }
+
 .book-card {
     border: none;
     text-align: center;
@@ -157,6 +270,7 @@ body {
     width: 180px;
     flex: 0 0 calc(20% - 20px);
 }
+
 .book-card img {
     width: 100%;
     height: 250px;
@@ -165,37 +279,44 @@ body {
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
+
 .book-card h5 {
     font-size: 1.1rem;
     font-weight: bold;
     color: #333;
     margin-bottom: 5px;
 }
+
 .book-card .category {
     font-size: 0.9rem;
     color: #666;
     margin-bottom: 10px;
 }
+
 .book-card .price {
     font-size: 1rem;
     font-weight: bold;
     color: #333;
     margin-bottom: 10px;
 }
+
 .book-card .price del {
     color: #999;
     font-weight: normal;
     margin-left: 5px;
 }
+
 .book-card .btn {
     background-color: #007bff;
     border: none;
     padding: 8px 20px;
     font-size: 0.9rem;
 }
+
 .reviews-section {
     padding: 50px 0;
 }
+
 .reviews-section h2 {
     font-size: 2.5rem;
     font-weight: bold;
@@ -203,10 +324,12 @@ body {
     text-align: center;
     margin-bottom: 40px;
 }
+
 .reviews-section .row {
     max-width: 1200px;
     margin: 0 auto;
 }
+
 .review-card {
     border: 1px solid #e0e0e0;
     border-radius: 10px;
@@ -216,44 +339,53 @@ body {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     position: relative;
 }
+
 .review-card img {
     width: 60px;
     height: 60px;
     border-radius: 50%;
     margin-bottom: 15px;
 }
+
 .review-card h5 {
     font-size: 1.1rem;
     font-weight: bold;
     color: #333;
     margin-bottom: 10px;
 }
+
 .review-card p {
     font-size: 0.9rem;
     color: #666;
     margin-bottom: 15px;
 }
+
 .review-card .stars {
     color: #ffcc00;
     font-size: 1rem;
 }
+
 .review-card .quote-left,
 .review-card .quote-right {
     position: absolute;
     font-size: 2rem;
     color: #e0e0e0;
 }
+
 .review-card .quote-left {
     top: 10px;
     left: 10px;
 }
+
 .review-card .quote-right {
     bottom: 10px;
     right: 10px;
 }
+
 .blog-section {
     padding: 50px 0;
 }
+
 .blog-section h2 {
     font-size: 2.5rem;
     font-weight: bold;
@@ -261,10 +393,12 @@ body {
     text-align: center;
     margin-bottom: 40px;
 }
+
 .blog-section .row {
     max-width: 1200px;
     margin: 0 auto;
 }
+
 .blog-card {
     border: none;
     border-radius: 10px;
@@ -272,53 +406,64 @@ body {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease;
 }
+
 .blog-card:hover {
     transform: translateY(-5px);
 }
+
 .blog-card img {
     width: 100%;
     height: 250px;
     object-fit: cover;
 }
+
 .blog-card-body {
     padding: 20px;
     background-color: #fff;
 }
+
 .blog-card h5 {
     font-size: 1.1rem;
     font-weight: bold;
     color: #333;
     margin-bottom: 10px;
 }
+
 .blog-card p {
     font-size: 0.9rem;
     color: #666;
     margin-bottom: 15px;
 }
+
 .blog-card .like-icon {
     color: #007bff;
     font-size: 1rem;
 }
+
 .footer {
     background-color: #e6f0fa;
     padding: 40px 0;
     color: #333;
 }
+
 .footer .container {
     max-width: 1200px;
     margin: 0 auto;
 }
+
 .footer h5 {
     font-size: 1.1rem;
     font-weight: bold;
     margin-bottom: 20px;
     text-transform: uppercase;
 }
+
 .footer p {
     font-size: 0.9rem;
     color: #666;
     margin-bottom: 10px;
 }
+
 .footer a {
     color: #666;
     text-decoration: none;
@@ -326,22 +471,27 @@ body {
     display: block;
     margin-bottom: 10px;
 }
+
 .footer a:hover {
     color: #007bff;
 }
+
 .footer .social-icons a {
     color: #333;
     font-size: 1.2rem;
     margin-right: 10px;
 }
+
 .footer .social-icons a:hover {
     color: #007bff;
 }
+
 .footer .newsletter-form {
     display: flex;
     align-items: center;
     gap: 10px;
 }
+
 .footer .newsletter-form input {
     padding: 8px;
     border: 1px solid #e0e0e0;
@@ -350,6 +500,7 @@ body {
     width: 100%;
     max-width: 200px;
 }
+
 .footer .newsletter-form button {
     padding: 8px 20px;
     background-color: #007bff;
@@ -359,6 +510,7 @@ body {
     font-size: 0.9rem;
     cursor: pointer;
 }
+
 .footer .newsletter-form button:hover {
     background-color: #0056b3;
 }
